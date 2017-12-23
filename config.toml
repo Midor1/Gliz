@@ -1,0 +1,16 @@
+# Configuration file of Gliz server.
+
+[Addresses]
+# Default server port is 811 and you can change it as your wish.
+# Please use full address for database addresses, but only port number for servers.
+MySQLAddress = "localhost:3306"
+RedisAddress = "localhost:6379"
+ServerAddress = ":811"
+
+[Authenticators]
+MySQLUserName = "root"
+MySQLPassword = "root"
+
+[Keys]
+# If you say so~
+SessionAuthenticationKey = "Tsukuyomi-Sasami"
