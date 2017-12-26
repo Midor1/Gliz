@@ -30,7 +30,12 @@ func main() {
 	//Create Item and Item Request
 	rtr.HandleFunc("/item",controller.CreateItem).Methods("POST")
 	rtr.HandleFunc("/item",controller.ItemsRetrieve).Methods("GET")
-
+	//Get Item Info
+	rtr.HandleFunc("/item/{ItemID:[1-9][0-9]*}",controller.GetItemByID).Methods("GET")
+	//Cart Handler
+	rtr.HandleFunc("/cart",controller.AddToCart).Methods("POST")
+	rtr.HandleFunc("/cart",controller.CartRetrieve).Methods("GET")
+	rtr.HandleFunc("/cart",controller.DeleteFromCart).Methods("DELETE")
 	//SayHello function used to check server status.
 	rtr.HandleFunc("/hello", SayHello).Methods("GET")
 	http.Handle("/", rtr)

@@ -100,7 +100,7 @@
      + Body
      
             {
-                "ItemID": 5
+                ItemID: 5
             }
 
 ### Item Query [GET]
@@ -148,3 +148,148 @@
                     }
                 ]
             }
+
+## A Certain Item [/item/{ItemID}]
+
+### Get Item Info [GET]
+
++ Response 200 (application/json)
+     + Attribute
+         + ItemName    (string)
+         + Category    (string)
+         + Price       (int) 
+         + Description (string)
+         + Image       (string)
+     + Body
+     
+            {
+                "ItemName": "Fresh Apple",
+                "Description": "Umai!",
+                "Price": 600,
+                "Category": "/Food/Fruit",
+                "Image": ""
+            }
+            
+## Cart [/cart]
+
+### Add to Cart [POST]
+
++ Request (multipart/form-data)
+     + Key-Value Pairs
+         + ItemID    (int, required)
+         + Amount    (int, default = 1)
+
++ Response 200 (application/json)
+    + Attribute
+        + status (int)
+    + Body
+     
+          {
+              status:-1
+          }
+
+### Show Cart [GET]
+
++ Response 200 (application/json)
+     + Attribute
+         + ItemsCount  (int)  
+         + CartItems   (CartItem[])
+     + Body
+     
+            {
+                "ItemsCount": 3,
+                "CartItems": [
+                    {
+                        "ItemID": 1,
+                        "Amount": 3
+                    },
+                    {
+                        "ItemID": 3,
+                        "Amount": 1
+                    }
+                ]
+            }
+            
+### Delete from Cart [DELETE]
+
++ Request (multipart/form-data)
+     + Key-Value Pairs
+         + ItemID    (int, required)
+         + Amount    (int, default = 1)
+  
++ Response 200 (application/json)
+    + Attribute
+        + status (int)
+    + Body
+     
+          {
+              status:-1
+          }
+
+## Orders [/order]
+
+### Check Out [POST]
+
++ Response 200 (application/json)
+    + Attribute
+         + OrderID    (int)
+    + Body
+     
+           {
+               OrderID:242545
+           }
+           
+### Order Query [GET]
+
++ Parameters
+    + status   (int)
+    + time     (timestamp)
+
++ Response 200 (application/json)
+     + Attribute
+         + OrdersCount (int)
+         + Orders ([]int)
+     + Body
+     
+            {
+                "OrdersCount": 3,
+                "Orders": [
+                    32465425463544,
+                    32565636454631,
+                    787654323456
+                ]
+            }
+            
+## A Certain Order [/order/{OrderID}]
+
+### Get Order Info [GET]
+
+This API will check the permission of the active user.
+
++ Response 200 (application/json)
+     + Attribute
+         + UserID     (int)
+         + Subtotal   (int)
+         + Time       (timestamp) 
+         + OrderItems (OrderItem[])
+     + Body
+     
+            {
+                "UserID": 23,
+                "Subtotal": 239800,
+                "Time": 3456787320,
+                "OrderItems": [
+                        {
+                            "ItemID": 1,
+                            "Amount": 3,
+                            "Price": 2399 
+                        },
+                        {
+                            "ItemID": 3,
+                            "Amount": 1,
+                            "Price": 400
+                        }
+                    ]
+            }
+
+

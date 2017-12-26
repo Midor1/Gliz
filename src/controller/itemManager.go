@@ -3,6 +3,7 @@ package controller
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"model"
 	"net/http"
 	"strconv"
@@ -11,6 +12,15 @@ import (
 type ItemsRet struct {
 	ItemCnt int          `json:"ItemsCount"`
 	Items   []model.Item `json:"Items"`
+}
+
+type ItemRet struct {
+	ItemName    string `json:"ItemName"`
+	Category    string `json:"Category"`
+	Price       int    `json:"Price"`
+	Description string `json:"Description"`
+	Image       string `json:"Image"`
+	SellerID    int    `json:"SellerID"`
 }
 
 type CreateItemRet struct {
@@ -34,8 +44,10 @@ func CreateItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//enc := mahonia.NewEncoder("GBK")
 	sellerid := CheckSession(cookie.Value)
 	itemname := r.MultipartForm.Value["ItemName"][0]
+
 	fmt.Println(itemname)
 	
 	category := r.MultipartForm.Value["Category"][0]
@@ -82,6 +94,18 @@ func ItemsRetrieve(w http.ResponseWriter, r *http.Request) {
 	items, _ := model.GetItems( "%" + name + "%",priceLb,priceUb,"%" + category + "%")
 	num := len(items)
 	info := ItemsRet{num,items}
+	ret, _ := json.Marshal(info)
+	fmt.Fprint(w, string(ret))
+}
+
+func GetItemByID(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type")
+	r.ParseForm()
+	id, _ := strconv.Atoi(mux.Vars(r)["ItemID"])
+	item, _ := model.GetItem(id)
+	info := ItemRet{item.ItemName,item.Category,item.Price,item.Description,item.Image,item.SellerID}
 	ret, _ := json.Marshal(info)
 	fmt.Fprint(w, string(ret))
 }

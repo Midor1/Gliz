@@ -78,3 +78,29 @@ func GetItems(name string, priceLb int, priceUb int,category string) ([]Item, er
 	}
 	return items, nil
 }
+
+func GetItem(id int) (Item, error) {
+	db, err := sql.Open("mysql", config.C.Authenticators.SQLUserName + ":" + config.C.Authenticators.SQLPassword + "@tcp("+config.C.Addresses.SQLAddr+")/smart?charset=utf8")
+	if err != nil {
+		fmt.Print(err.Error())
+		return Item{}, err
+	}
+	defer db.Close()
+	query, err := db.Prepare("SELECT ItemID,ItemName,Price,Description,Category,Image,SellerID FROM item WHERE ItemID = ?")
+	if err != nil {
+		fmt.Print(err.Error())
+		return Item{}, err
+	}
+	rows, err := query.Query(id)
+	if err != nil {
+		fmt.Print(err.Error())
+		return Item{}, err
+	}
+	defer query.Close()
+	defer rows.Close()
+	var item Item
+	for rows.Next() {
+		rows.Scan(&item.ItemID,&item.ItemName,&item.Price,&item.Description,&item.Category,&item.Image,&item.SellerID)
+	}
+	return item, nil
+}
